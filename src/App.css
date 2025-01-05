@@ -11,3 +11,18 @@ nav {
 .anticon{
   cursor: pointer;
 }
+.create-todo {
+  border: solid 1px black;
+  border-radius: 10px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.create-todo:hover {
+  background-color: #f0f8ff;
+  transform: scale(1.05);
+}
+.title-todo{
+  word-break: break-all;
+  word-wrap: break-word;
+  white-space: normal;
+}

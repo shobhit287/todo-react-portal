@@ -25,6 +25,8 @@ export const errorHandler = (error: ErrorInterface) => {
         } else if (typeof errors === "object") {
             notification.error({ message: errors.error });
 
+        } else if(typeof errors === "string"){
+            notification.error({ message: errors });
         } else {
             notification.error({ message: "An Unexpected error occured" });
         }

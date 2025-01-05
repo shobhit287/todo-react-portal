@@ -1,4 +1,6 @@
 export const apiEndpoint = {
     user: "/user",
-    login: "/login"
+    login: "/login",
+    todo: "/todo",
+    searchTodo: "/todo/search",
 }

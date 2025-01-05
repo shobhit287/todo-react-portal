@@ -1,17 +1,34 @@
 import { Modal, Form, Input, Button, Row, Col } from "antd";
+import { UserInterface } from "../../App";
+import { useEffect } from "react";
 
-interface SignupModalProps {
-  showModal: boolean;
+interface CreateUpdateModalProps {
+  showModal: string;
+  user: UserInterface | null;
+  mode: string;
   toggleModal: () => void;
   handleSubmit: (values: any) => void;
 }
 
-const SignupModal = ({
+const CreateUpdateModal = ({
   showModal,
   toggleModal,
   handleSubmit,
-}: SignupModalProps) => {
-  const passwordValidator = (_, value: string) => {
+  user,
+  mode
+}: CreateUpdateModalProps) => {
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    if(mode == "Update" && user) {
+      form.setFieldsValue({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email
+      });
+    }
+  }, []);
+  const passwordValidator = (_: any, value: string) => {
     const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (value && !regex.test(value)) {
       return Promise.reject(
@@ -26,12 +43,12 @@ const SignupModal = ({
   return (
     <div>
       <Modal
-        title="Sign Up"
-        open={showModal}
+        title={`${mode} User`}
+        open={showModal ? true : false}
         onCancel={toggleModal}
         footer={null}
       >
-        <Form onFinish={handleSubmit} layout="vertical">
+        <Form onFinish={handleSubmit} layout="vertical" form={form}>
           <Row>
             <Col span={24}>
               <Form.Item
@@ -41,7 +58,7 @@ const SignupModal = ({
                   { required: true, message: "Please input your first name" },
                 ]}
               >
-                <Input />
+                <Input placeholder="First Name"/>
               </Form.Item>
             </Col>
 
@@ -53,7 +70,7 @@ const SignupModal = ({
                   { required: true, message: "Please input your last name" },
                 ]}
               >
-                <Input />
+                <Input placeholder="Last Name"/>
               </Form.Item>
             </Col>
 
@@ -69,24 +86,26 @@ const SignupModal = ({
                   },
                 ]}
               >
-                <Input />
+                <Input placeholder="Email"/>
               </Form.Item>
             </Col>
-
+            
+            {mode == "Create" && (
             <Col span={24}>
               <Form.Item
                 label="Password"
                 name="password"
                 rules={[{required: true},{ validator: passwordValidator }]}
               >
-                <Input.Password />
+                <Input.Password placeholder="Password"/>
               </Form.Item>
             </Col>
+            )}
             
             <Col span={24}>
             <Form.Item>
               <Button type="primary" htmlType="submit" block>
-                Sign Up
+                {mode == "Create" ? "Sign Up" : "Update"}
               </Button>
             </Form.Item>
             </Col>
@@ -96,4 +115,4 @@ const SignupModal = ({
     </div>
   );
 };
-export default SignupModal;
+export default CreateUpdateModal;

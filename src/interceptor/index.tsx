@@ -28,6 +28,8 @@ service.interceptors.response.use((response) => {
         notification.error({message: "Internal Server Error"});
     } else if (status == 408) {
         notification.error({message: "Request Timeout"});
+    } else if (status == 429) {
+        notification.error({message: "Too Many Requests"});
     } else if(interceptorHandledError.includes(code)) {
         notification.error({message: code});
     }

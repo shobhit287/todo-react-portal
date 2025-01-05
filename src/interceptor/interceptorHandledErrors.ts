@@ -1,1 +1,1 @@
-export const interceptorHandledError = [500, 408, "ERR_NETWORK"];
+export const interceptorHandledError = [500, 408, 429, "ERR_NETWORK"];

@@ -1,7 +1,7 @@
 import { Modal, Form, Input, Button, Row, Col } from "antd";
 
 interface LoginModalProps {
-  showModal: boolean;
+  showModal: string;
   toggleModal: () => void;
   handleSubmit: (values: any) => void;
 }
@@ -15,7 +15,7 @@ const LoginModal = ({
     <div>
       <Modal
         title="Login"
-        open={showModal}
+        open={showModal ? true : false}
         onCancel={toggleModal}
         footer={null}
       >
@@ -33,7 +33,7 @@ const LoginModal = ({
                   },
                 ]}
               >
-                <Input />
+                <Input placeholder="Email"/>
               </Form.Item>
             </Col>
 
@@ -45,7 +45,7 @@ const LoginModal = ({
                   { required: true, message: "Please input your password!" },
                 ]}
               >
-                <Input.Password />
+                <Input.Password placeholder="Password"/>
               </Form.Item>
             </Col>
 
