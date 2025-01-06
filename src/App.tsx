@@ -127,6 +127,7 @@ function App() {
       notification.success({message: "Details updated successfully"});
       fetchUserData();
       toggleModal();
+      setShowModal("login");
     }
     setApiCalling(false);
   }
