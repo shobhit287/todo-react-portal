@@ -31,7 +31,7 @@ service.interceptors.response.use((response) => {
     } else if (status == 429) {
         notification.error({message: "Too Many Requests"});
     } else if(interceptorHandledError.includes(code)) {
-        notification.error({message: code});
+        notification.error({message: error.message || code});
     }
     return Promise.reject(error);
 });
