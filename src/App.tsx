@@ -12,6 +12,7 @@ import { DecodeTokenInterface, UserService } from "./service/user.service";
 import { AuthService } from "./service/auth.service";
 import Cookies from "js-cookie";
 import { TodoResponse, todoService } from "./service/todo.service";
+import useStore from "./store";
 
 interface SignUp {
   firstName: string;
@@ -40,6 +41,7 @@ function App() {
   const [mode, setMode] = useState<string>("");
   const [todos, setTodos] = useState<TodoResponse[] | []>([]);
   const [filteredTodos, setFilteredTodos] = useState<TodoResponse[] | []>([]);
+  const {setApiCalling} = useStore();
 
   useEffect(() => {
     fetchUserData();
@@ -106,6 +108,7 @@ function App() {
   }
 
   async function hanldeSignUp(values: SignUp) {
+    setApiCalling(true);
     if(mode == "Update") {
       handleUserUpdate(values);
       return;
@@ -115,6 +118,7 @@ function App() {
       notification.success({ message: "Signup Successfully" });
       toggleModal();
     }
+    setApiCalling(false);
   }
 
   async function handleUserUpdate(values: Partial<SignUp>) {
@@ -124,15 +128,18 @@ function App() {
       fetchUserData();
       toggleModal();
     }
+    setApiCalling(false);
   }
 
   async function handleLogin(values: Login) {
+    setApiCalling(true);
     const response = await AuthService.login(values);
     if (response != null && response != undefined) {
       await fetchUserData();
       notification.success({ message: "Login Successfully" });
       toggleModal();
     }
+    setApiCalling(false);
   }
 
   function handleSearch(value: string) {

@@ -1,6 +1,7 @@
 import { Modal, Form, Input, Button, Row, Col } from "antd";
 import { UserInterface } from "../../App";
 import { useEffect } from "react";
+import useStore from "../../store";
 
 interface CreateUpdateModalProps {
   showModal: string;
@@ -18,6 +19,7 @@ const CreateUpdateModal = ({
   mode
 }: CreateUpdateModalProps) => {
   const [form] = Form.useForm();
+  const {apiCalling} = useStore();
 
   useEffect(() => {
     if(mode == "Update" && user) {
@@ -104,7 +106,7 @@ const CreateUpdateModal = ({
             
             <Col span={24}>
             <Form.Item>
-              <Button type="primary" htmlType="submit" block>
+              <Button type="primary" loading={apiCalling} htmlType="submit" block>
                 {mode == "Create" ? "Sign Up" : "Update"}
               </Button>
             </Form.Item>

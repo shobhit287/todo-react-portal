@@ -1,5 +1,6 @@
 import { Button, Col, Form, Input, Modal, notification, Row } from "antd";
 import { TodoResponse, todoService } from "../../service/todo.service";
+import useStore from "../../store";
 interface CreateTodoProps {
   showModal: string;
   toggleModal: () => void;
@@ -13,13 +14,16 @@ export interface CreateTodo {
 
 const CreateTodoModal = (props: CreateTodoProps) => {
   const { showModal, toggleModal, fetchTodos} = props;
+  const {apiCalling, setApiCalling} = useStore();
   async function handleSubmit(values: CreateTodo) {
+    setApiCalling(true);
     const response : TodoResponse | null = await todoService.create(values);
     if(response != null && response != undefined) {
         notification.success({message: "Todo created successfully"});
         fetchTodos();
         toggleModal();
     }
+    setApiCalling(false);
   }
   return (
     <>
@@ -55,7 +59,7 @@ const CreateTodoModal = (props: CreateTodoProps) => {
 
             <Col span={24}>
               <Form.Item>
-                <Button type="primary" htmlType="submit" block>
+                <Button type="primary" loading={apiCalling} htmlType="submit" block>
                   Create
                 </Button>
               </Form.Item>

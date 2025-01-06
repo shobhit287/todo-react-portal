@@ -1,4 +1,5 @@
 import { Modal, Form, Input, Button, Row, Col } from "antd";
+import useStore from "../../store";
 
 interface LoginModalProps {
   showModal: string;
@@ -11,6 +12,7 @@ const LoginModal = ({
   toggleModal,
   handleSubmit,
 }: LoginModalProps) => {
+  const {apiCalling} = useStore();
   return (
     <div>
       <Modal
@@ -51,7 +53,7 @@ const LoginModal = ({
 
             <Col span={24}>
               <Form.Item>
-                <Button type="primary" htmlType="submit" block>
+                <Button type="primary" htmlType="submit" loading={apiCalling} block>
                   Login
                 </Button>
               </Form.Item>

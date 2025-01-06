@@ -1,6 +1,7 @@
 import { Modal, Button, Form, Input, Col, Row, notification } from "antd";
 import { UserInterface } from "../../App";
 import { UserService } from "../../service/user.service";
+import useStore from "../../store";
 
 interface changePasswordModalProps {
     user: UserInterface | null,
@@ -15,13 +16,16 @@ export interface changePasswordInterface {
 const ChangePasswordModal = (props : changePasswordModalProps) => {
   const {showModal, toggleModal, user} = props;  
   const [form] = Form.useForm();
+  const {apiCalling, setApiCalling} = useStore();
 
   const handleSubmit = async (values: changePasswordInterface) => {
+    setApiCalling(true);
     const response : UserInterface | null = await UserService.changePassword(user?.userId, values);
     if(response != null && response != undefined) {
         notification.success({message: "Password changed successfully"});
         toggleModal();
     }  
+    setApiCalling(false);
   };
 
   return (
@@ -30,7 +34,7 @@ const ChangePasswordModal = (props : changePasswordModalProps) => {
       title="Change Password"
       onCancel={toggleModal}
       footer={
-        <Button type="primary" form="changePasswordForm" key="submit" htmlType="submit">
+        <Button type="primary" loading={apiCalling} form="changePasswordForm" key="submit" htmlType="submit">
           Submit
         </Button>
       }

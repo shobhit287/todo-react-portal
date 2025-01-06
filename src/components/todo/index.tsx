@@ -3,6 +3,7 @@ import { CheckCircleOutlined, DeleteOutlined, EditOutlined } from "@ant-design/i
 import { UserInterface } from "../../App";
 import { TodoResponse, todoService, UpdateTodo } from "../../service/todo.service";
 import { useState } from "react";
+import useStore from "../../store";
 
 interface TodoProps {
   user: UserInterface | null;
@@ -13,7 +14,7 @@ interface TodoProps {
 const Todo = (props: TodoProps) => {
   const { user, todos, fetchTodos } = props;
   const [editFields, setEditFields] = useState<Partial<TodoResponse> | null>(null);
-
+  const {apiCalling, setApiCalling} = useStore();
   async function handleStatusCompleted(todoId: string) {
     const response: TodoResponse | null = await todoService.statusCompleted(todoId);
     if (response) {
@@ -35,6 +36,7 @@ const Todo = (props: TodoProps) => {
       notification.error({ message: "Both 'Title' and 'Description' are required fields" });
       return;
     }
+    setApiCalling(true);
     const updatedFields: UpdateTodo = {
       title: editFields.title,
       description: editFields.description,
@@ -45,6 +47,7 @@ const Todo = (props: TodoProps) => {
       setEditFields(null);
       fetchTodos();
     }
+    setApiCalling(false);
   }
 
   function handleEditClick(todo: TodoResponse) {
@@ -126,7 +129,7 @@ const Todo = (props: TodoProps) => {
 
                 {editFields && editFields._id === todo._id && (
                   <Col span={24} style={{ textAlign: "right" }}>
-                    <Button type="primary" onClick={handleUpdateTodo}>
+                    <Button type="primary" loading={apiCalling} onClick={handleUpdateTodo}>
                       Update Todo
                     </Button>
                     <Button type="default" className="mx-2" onClick={() => setEditFields(null)}>
