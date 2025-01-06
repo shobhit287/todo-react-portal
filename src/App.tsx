@@ -10,7 +10,6 @@ import CreateTodoModal from "./components/todo/createTodoModal";
 import ChangePasswordModal from "./components/todo/changePasswordModal";
 import { DecodeTokenInterface, UserService } from "./service/user.service";
 import { AuthService } from "./service/auth.service";
-import Cookies from "js-cookie";
 import { TodoResponse, todoService } from "./service/todo.service";
 import useStore from "./store";
 
