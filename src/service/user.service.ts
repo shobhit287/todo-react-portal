@@ -11,6 +11,11 @@ interface createInterFace {
     password: string,
 }
 
+export interface DecodeTokenInterface {
+  hasToken: boolean,
+  user?: UserInterface
+}
+
 export const UserService = {
     create: async function (data: createInterFace) {
         try {
@@ -30,6 +35,20 @@ export const UserService = {
         try {
             const response : UserInterface = await service({
                 url: `${apiEndpoint.user}/${id}`,
+                method: "get",
+            });
+            return response;
+        } catch (error: unknown) {
+            const customError : any = error;
+            errorHandler(customError);
+            return null;
+        }
+    },
+
+    decodeToken: async function (): Promise<DecodeTokenInterface | null>  {
+        try {
+            const response : DecodeTokenInterface = await service({
+                url: `${apiEndpoint.user}/decode-token`,
                 method: "get",
             });
             return response;

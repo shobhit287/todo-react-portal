@@ -8,10 +8,9 @@ import CreateUpdateModal from "./components/todo/createUpdateModal";
 import LoginModal from "./components/todo/loginModal";
 import CreateTodoModal from "./components/todo/createTodoModal";
 import ChangePasswordModal from "./components/todo/changePasswordModal";
-import { UserService } from "./service/user.service";
+import { DecodeTokenInterface, UserService } from "./service/user.service";
 import { AuthService } from "./service/auth.service";
 import Cookies from "js-cookie";
-import { jwtDecode } from "jwt-decode";
 import { TodoResponse, todoService } from "./service/todo.service";
 
 interface SignUp {
@@ -86,18 +85,12 @@ function App() {
   }
 
   async function fetchUserData() {
-    const token: string | undefined = Cookies.get("token");
-    if (token) {
-      const decodedToken: UserInterface = jwtDecode(token as string);
-      const response: UserInterface | null = await UserService.getById(
-        decodedToken.userId
-      );
-      if (response != null && response != undefined) {
-        setUser(response);
+      const response: DecodeTokenInterface | null = await UserService.decodeToken();
+      if (response && response.user) {
+         setUser(response.user);
       }
+      setLoading(false);
     }
-    setLoading(false);
-  }
 
   async function fetchTodos() {
     const response : TodoResponse[] | null = await todoService.search(`?userId=${user?.userId}`);
@@ -136,9 +129,7 @@ function App() {
   async function handleLogin(values: Login) {
     const response = await AuthService.login(values);
     if (response != null && response != undefined) {
-      const token: string | undefined = Cookies.get("token");
-      const decodedToken: UserInterface = jwtDecode(token as string);
-      setUser(decodedToken);
+      await fetchUserData();
       notification.success({ message: "Login Successfully" });
       toggleModal();
     }

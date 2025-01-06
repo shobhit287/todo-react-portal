@@ -36,10 +36,10 @@ const Todo = (props: TodoProps) => {
       return;
     }
     const updatedFields: UpdateTodo = {
-      title: editFields?.title,
-      description: editFields?.description,
+      title: editFields.title,
+      description: editFields.description,
     };
-    const response = await todoService.update(editFields?._id, updatedFields);
+    const response = await todoService.update(editFields._id as string, updatedFields);
     if (response) {
       notification.success({ message: "Todo updated successfully" });
       setEditFields(null);
@@ -65,88 +65,82 @@ const Todo = (props: TodoProps) => {
 
   return user && todos ? (
     <Row gutter={[16, 16]}>
-      {todos.map((todo) => (
-        <Col xs={24} sm={12} md={12} lg={12} xl={8} key={todo._id}>
-          <Card
-            title={
-              editFields && editFields._id === todo._id ? (
-                <input
-                  type="text"
-                  name="title"
-                  placeholder="Enter title"
-                  onChange={handleFieldChange}
-                  className="w-100 p-2"
-                  value={editFields.title}
-                />
-              ) : (
-                <span className="title-todo">{todo.title}</span>
-              )
-            }
-            extra={
-              <div className="d-flex gap-3 px-1">
-                {(!editFields || (editFields && editFields._id !== todo._id)) && (
-                  <Tooltip title="Edit">
-                    <EditOutlined onClick={() => handleEditClick(todo)} />
-                  </Tooltip>
-                )}
-
-                {todo.status === "PENDING" && (
-                  <Tooltip title="Mark as completed">
-                    <CheckCircleOutlined onClick={() => handleStatusCompleted(todo._id)} />
-                  </Tooltip>
-                )}
-
-                <Tooltip title="Delete">
-                  <DeleteOutlined onClick={() => handleDelete(todo._id)} />
-                </Tooltip>
-              </div>
-            }
-          >
-            <Row gutter={[10, 10]}>
-              <Col span={24}>
-                {editFields && editFields._id === todo._id ? (
-                  <textarea
-                    name="description"
+      {todos.length ? (
+        todos.map((todo) => (
+          <Col xs={24} sm={12} md={12} lg={12} xl={8} key={todo._id}>
+            <Card
+              title={
+                editFields && editFields._id === todo._id ? (
+                  <input
+                    type="text"
+                    name="title"
+                    placeholder="Enter title"
                     onChange={handleFieldChange}
-                    placeholder="Enter description"
                     className="w-100 p-2"
-                    value={editFields.description}
+                    value={editFields.title}
                   />
                 ) : (
-                  <p>Description: {todo.description}</p>
-                )}
-                <p>
-                  Status:{" "}
-                  <span style={{ color: todo.status === "PENDING" ? "black" : "green" }}>
-                    {todo.status}
-                  </span>
-                </p>
-                <p>
-                  Created On:{" "}
-                  <span style={{ color: "black" }}>
-                    {new Date(todo.createdAt).toLocaleDateString("en-GB")}
-                  </span>
-                </p>
-              </Col>
+                  <span className="title-todo">{todo.title}</span>
+                )
+              }
+              extra={
+                <div className="d-flex gap-3 px-1">
+                  {(!editFields || (editFields && editFields._id !== todo._id)) && (
+                    <Tooltip title="Edit">
+                      <EditOutlined onClick={() => handleEditClick(todo)} />
+                    </Tooltip>
+                  )}
 
-              {editFields && editFields._id === todo._id && (
-                <Col span={24} style={{ textAlign: "right" }}>
-                  <Button type="primary" onClick={handleUpdateTodo}>
-                    Update Todo
-                  </Button>
-                  <Button
-                    type="default"
-                    className="mx-2"
-                    onClick={() => setEditFields(null)}
-                  >
-                    Cancel
-                  </Button>
+                  {todo.status === "PENDING" && (
+                    <Tooltip title="Mark as completed">
+                      <CheckCircleOutlined onClick={() => handleStatusCompleted(todo._id)} />
+                    </Tooltip>
+                  )}
+
+                  <Tooltip title="Delete">
+                    <DeleteOutlined onClick={() => handleDelete(todo._id)} />
+                  </Tooltip>
+                </div>
+              }
+            >
+              <Row gutter={[10, 10]}>
+                <Col span={24}>
+                  {editFields && editFields._id === todo._id ? (
+                    <textarea
+                      name="description"
+                      onChange={handleFieldChange}
+                      placeholder="Enter description"
+                      className="w-100 p-2"
+                      value={editFields.description}
+                    />
+                  ) : (
+                    <p>Description: {todo.description}</p>
+                  )}
+                  <p>
+                    Status: <span style={{ color: todo.status === "PENDING" ? "black" : "green" }}>{todo.status}</span>
+                  </p>
+                  <p>
+                    Created On: <span style={{ color: "black" }}>{new Date(todo.createdAt).toLocaleDateString("en-GB")}</span>
+                  </p>
                 </Col>
-              )}
-            </Row>
-          </Card>
-        </Col>
-      ))}
+
+                {editFields && editFields._id === todo._id && (
+                  <Col span={24} style={{ textAlign: "right" }}>
+                    <Button type="primary" onClick={handleUpdateTodo}>
+                      Update Todo
+                    </Button>
+                    <Button type="default" className="mx-2" onClick={() => setEditFields(null)}>
+                      Cancel
+                    </Button>
+                  </Col>
+                )}
+              </Row>
+            </Card>
+          </Col>
+        ))
+      ) : (
+        <Col span={24}><h3 className="text-center">No todos found. Add a new one to get started!</h3></Col>
+      )}
     </Row>
   ) : (
     <h3 className="text-center">Please Login to view or create todos</h3>
