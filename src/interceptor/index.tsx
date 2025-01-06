@@ -11,6 +11,10 @@ export const service = axios.create({
 
 service.interceptors.request.use(
   (config) => {
+    const frontendOrigin = window.location.origin;
+    if (!config.headers['Origin']) {
+      config.headers['Origin'] = frontendOrigin;
+    }
     return config;
   },
   (error) => {
