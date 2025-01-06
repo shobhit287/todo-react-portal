@@ -27,15 +27,16 @@ service.interceptors.response.use((response) => {
 },
 (error) => {
     const {status} = error?.response || {};
+    const {error: errorMsg} = error?.response?.data || {};
     const {code} = error || {};
     if(status == 500) {
-        notification.error({message: "Internal Server Error"});
+        notification.error({message: errorMsg || "Internal Server Error"});
     } else if (status == 408) {
         notification.error({message: "Request Timeout"});
     } else if (status == 429) {
         notification.error({message: "Too Many Requests"});
     } else if(interceptorHandledError.includes(code)) {
-        notification.error({message: error.message || code});
+        notification.error({message: error.message || errorMsg || code});
     }
     return Promise.reject(error);
 });

@@ -81,9 +81,12 @@ function App() {
     },
   ];
 
-  function handleLogout() {
-    Cookies.remove("token");
-    setUser(null);
+  async function handleLogout() {
+    const response = await AuthService.logout();
+    if(response != null && response != undefined) {
+      notification.success({message: "Logout Successfully"});
+      setUser(null);
+    }
   }
 
   async function fetchUserData() {

@@ -20,5 +20,18 @@ export const AuthService = {
             const customError : any = error;
             errorHandler(customError);
         }
+    },
+
+    logout: async function () {
+        try {
+            const response = await service({
+                url: `${apiEndpoint.logout}`,
+                method: "post",
+            })
+            return response;
+        } catch (error: unknown) {
+            const customError : any = error;
+            errorHandler(customError);
+        }
     }
 }
