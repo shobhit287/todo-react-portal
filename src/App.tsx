@@ -119,6 +119,7 @@ function App() {
     if (response != null && response != undefined) {
       notification.success({ message: "Signup Successfully" });
       toggleModal();
+      setShowModal("login");
     }
     setApiCalling(false);
   }
@@ -129,7 +130,6 @@ function App() {
       notification.success({message: "Details updated successfully"});
       fetchUserData();
       toggleModal();
-      setShowModal("login");
     }
     setApiCalling(false);
   }
